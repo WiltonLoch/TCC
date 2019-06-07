@@ -1,0 +1,79 @@
+\chapter{Introdução}
+\label{ch:intro}
+
+Desde os primórdios da computação a parte majoritária das aplicações vem sendo desenvolvidas de maneira monolítica, ou seja, estruturadas em grandes blocos de código que juntos em um arquivo ou projeto formam o sistema em si \cite{microsservicos:definicao_microsservicos}.
+%
+Nesse modelo, os componentes do \textit{software} são fortemente conectados e a modularização dos elementos pode ser feita apenas pela divisão de arquivos dentro de um mesmo projeto ou ambiente de trabalho.
+%
+As aplicações são desenvolvidas puramente através da construção incremental sobre tal conjunto de arquivos, nos quais diferentes desenvolvedores podem trabalhar em uníssono sobre partes diferentes do mesmo monólito integrado.
+
+%A evolução do \textit{software} bem como o acompanhamento do progresso é feito através de sistemas de versionamento consolidados no mercado, contribuindo também para a divisão do trabalho entre diferentes colaboradores.
+%
+%Dentre outras diversas características do modelo monolítico, inerentes à sua estrutura em si, temos o conjunto que forma uma das arquiteturas clássicas no desenvolvimento de sistemas.
+%
+
+%
+De modo geral, esse modelo de arquitetura funcionou bem por muito tempo e até então tem atendido à boa parte das necessidades de desenvolvedores e empresas com aplicações que não possuem grande porte, tanto do ponto de vista de código quanto de uso.
+%
+Porém, com a recorrente facilitação e popularização do acesso à tecnologia é natural que haja um aumento significativo na quantidade de usuários que diariamente conectam-se às aplicações e realizam contínuas requisições, bem como uso de dados.
+%
+Consequentemente, a necessidade de melhorias e de disponibilidade do sistema aos usuários aumenta, expandindo consigo a quantidade de código e de funcionalidades que os mesmos devem prover.
+%
+Assim, problemas já existentes no modelo arquitetural monolítico se tornaram ainda mais evidentes e prejudiciais para o processo de desenvolvimento.
+%
+Fatores como controle e compartilhamento de código, distribuição de versões, correção de \textit{bugs} e falhas acabam tornando-se tarefas penosas em grandes aplicações, prejudicando assim a eficiência e a competitividade das empresas que se ativeram ao modelo \cite{microsservicos:uber}.
+
+%
+Para desviar desses problemas eminentes não seria suficiente apenas aumentar a quantidade de \textit{hardware} à disposição das aplicações; era necessária uma reformulação da maneira de construí-las em si.
+%
+Essa alternativa explorada por empresas como Uber \cite{microsservicos:uber}, Netflix \cite{microsservicos:netflix} e diversas outras \cite{microsservicos:empresas} para mitigar os problemas decorrentes do monólito foi rearquitetar os sistemas para que funcionassem através de um conjunto de microsserviços.
+%
+Estes, ao comunicarem-se entre si, realizam as funções do sistema de maneira independente e distribuída. Desta forma, uma parte central da aplicação interage com diversos microsserviços remotamente - utilizando de comunicação via rede - sem se preocupar com a execução da tarefa de cada um deles, porém utilizando seus serviços como partes constituintes da execução como um todo.
+
+%
+Os microsserviços, por tratarem-se basicamente das partes fundamentais de um sistema distribuído, podem ser facilmente alocados em máquinas distintas sobre a rede.
+%
+Porém, ao tratar demandas de dados e requisições muito elevadas torna-se necessário o uso de \textit{hardware} que dê suporte para tal da mesma forma que outras medidas para garantir características como confiabilidade e capacidade de sobrevivência das alocações.
+%
+Entretanto, o investimento necessário para a compra e manutenção de \textit{hardware}, bem como a garantia do funcionamento adequado do mesmo para a aplicação podem não ser esforços atrativos para muitas companhias que utilizam microsserviços.
+%
+Torna-se então genuinamente interessante para tais empresas contratar provedores que forneçam a infraestrutura necessária como um serviço.
+%
+Há, entretanto, um problema inerente aos contratos de serviços relacionados à nuvens computacionais, principalmente quando fornecidos a usuários nas bordas da internet que não possuem controle sobre dados relacionados ao serviço\cite{nuvem_sla:edge_computing}, que trata-se da falta de garantia de cumprimento do acordado por parte do provedor, de modo que este pode fornecer menos recursos do que o previamente estabelecido em contrato, injustiçando assim seus clientes \cite{nuvem_sla:violacaoSLA}. Casos comuns de quebra de contrato no sentido dos provedores envolvem o não fornecimento de recursos como o prometido, principalmente tratando-se de poder computacional, quantidade de memória primária disponível, largura de banda e tempo de resposta. Tais quebras de contrato derivam de fatores como alocação de \textit{hardwares} inferiores, compartilhamento das unidades físicas por diversos usuários ou simplesmente má intenção dos responsáveis por fornecer o serviço. 
+%
+Pelo outro lado, clientes que contratam o serviço podem também forjar dados de execução falsos, acusando os provedores de negligência no fornecimento do serviço e buscando com isso algum tipo de vantagem mercadológica ou jurídica.
+%
+Portanto, torna-se uma tarefa complexa aferir e julgar corretamente qual das partes envolvidas no contrato foi lesada e qual buscou um benefício ilícito em face de uma disputa contratual.
+
+Um protocolo, segundo a definição de Tanembaum de \citeyear{nuvem_sla:tanenbaum}, é um acordo entre as partes que se comunicam, estabelecendo como se dará a comunicação. Portanto, o protocolo proposto formalizará como as mensagens serão trocadas entre os clientes e os provedores, a ordem das mesmas, bem como seus formatos estruturais.
+%
+%
+O protocolo será baseado em \textit{Blockchain} que busca garantir transparência para as transações e requisições entre provedores e clientes para alocação de microsserviços em ambientes \ac{IaaS}. É proposto também o desenvolvimento de um algoritmo distribuído sobre a cadeia que realize a conferência de uma reclamação, recompensando participantes que forneçam informações corretas e penalizando os que não o façam.
+%
+O uso de \textit{Blockchain} é justificado por sua habilidade de fomentar um ambiente distribuído com fácil verificação da existência e corretude de dados em um certo ponto no tempo. Tal característica torna possível auditar trocas de informação entre clientes e provedores, servindo como ponto de partida para a tomada de decisão a respeito de possíveis violações através do algoritmo proposto. Este, por sua vez, é centrado em uma votação assíncrona e distribuída, que utiliza como voto um histórico de monitoração mutuamente realizado por usuários e provedores, para inferir ocorrências de quebra de contrato resultantes da negligência do fornecedor.
+
+%
+O trabalho então, possibilita com uma porcentagem de certeza alta e previsível afirmar se houve ou não violações de contratos - desde que firmados dentro da rede - enquanto faz uso das vantagens promovidas por tecnologias de armazenamento distribuído, troca de mensagens e votação.
+
+\clearpage
+
+
+%------------------------------------------------
+\section{Objetivos}
+
+\textbf{Objetivo geral}: Este trabalho tem como objetivo o desenvolvimento de um protocolo, baseado em
+\textit{Blockchain} para auxiliar a elaboração e auditoria de contratos entre usuários e provedores de IaaS para microsserviços.
+
+\vskip 0.5cm
+\noindent\textbf{Objetivos específicos}: 
+\begin{itemize}
+    \item Realizar uma revisão bibliográfica sobre o gerenciamento de microsserviços provisionados em provedores de nuvem e na borda da Internet.
+    \item Realizar uma revisão bibliográfica sobre o estabelecimento de contratos usando \textit{Blockchain} em cenários competitivos e egoístas.
+    \item Identificar os elementos comuns no estabelecimento de contratos entre provedores de microsserviços e usuários.
+    \item Especificar e desenvolver um protocolo para tal finalidade.
+    \item Implementar o protocolo usando um cenário existente de \textit{Blockchain}.
+    \item Realizar coleta de dados com intuito de quantificar o benefício da proposta.
+\end{itemize}
+
+
+\section{Estrutura do Trabalho}
