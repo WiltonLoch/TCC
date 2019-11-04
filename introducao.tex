@@ -33,47 +33,50 @@ Estes, ao comunicarem-se entre si, realizam as funções do sistema de maneira i
 %
 Os microsserviços, por tratarem-se basicamente das partes fundamentais de um sistema distribuído, podem ser facilmente alocados em máquinas distintas sobre a rede.
 %
-Porém, ao tratar demandas de dados e requisições muito elevadas torna-se necessário o uso de \textit{hardware} que dê suporte para tal da mesma forma que outras medidas para garantir características como confiabilidade e capacidade de sobrevivência das alocações.
+Porém, ao tratar demandas de dados e requisições elevadas torna-se necessário o uso de \textit{hardware} que dê suporte para tal da mesma forma que outras medidas para garantir características como confiabilidade e capacidade de sobrevivência das alocações.
 %
 Entretanto, o investimento necessário para a compra e manutenção de \textit{hardware}, bem como a garantia do funcionamento adequado do mesmo para a aplicação podem não ser esforços atrativos para muitas companhias que utilizam microsserviços.
 %
-Torna-se então genuinamente interessante para tais empresas contratar provedores que forneçam a infraestrutura necessária como um serviço.
+Torna-se então genuinamente interessante para tais empresas contratar provedores que forneçam a infraestrutura necessária como um serviço. Uma escolha interessante nesse meio são as tradicionais alocações de \ac{IaaS}, onde o provedor supre uma infraestrutura que deve ser administrada pelo usuário, sendo este responsável pela implantação e execução do serviço. Outra possibilidade é a alocação de \ac{FaaS}, cujas quais atuam como microsserviços executando tarefas específicas. Um exemplo de uso desta forma de serviço é o redimensionamento de imagens, necessário em sites com conteúdo em tempo real, \textit{stream} de vídeo, jogos, \textit{etc}. Para tal, uma ou mais unidades \ac{FaaS} alocadas executam simplesmente a tarefa de redimensionar uma certa imagem e retorná-la ao requisitante mediante a ocorrência da chamada. 
+
 %
-Há, entretanto, um problema inerente aos contratos de serviços relacionados à nuvens computacionais, principalmente quando fornecidos a usuários nas bordas da internet que não possuem controle sobre dados relacionados ao serviço\cite{nuvem_sla:edge_computing}, que trata-se da falta de garantia de cumprimento do acordado por parte do provedor, de modo que este pode fornecer menos recursos do que o previamente estabelecido em contrato, injustiçando assim seus clientes \cite{nuvem_sla:violacaoSLA}. Casos comuns de quebra de contrato no sentido dos provedores envolvem o não fornecimento de recursos como o prometido, principalmente tratando-se de poder computacional, quantidade de memória primária disponível, largura de banda e tempo de resposta. Tais quebras de contrato derivam de fatores como alocação de \textit{hardwares} inferiores, compartilhamento das unidades físicas por diversos usuários ou simplesmente má intenção dos responsáveis por fornecer o serviço. 
+Há, entretanto, um problema inerente aos contratos de serviços relacionados às nuvens computacionais, principalmente quando fornecidos a usuários nas bordas da Internet que não possuem controle sobre dados relacionados ao serviço \cite{nuvem_sla:edge_computing}, que trata-se da falta de garantia de cumprimento do acordado por parte do provedor, de modo que este pode fornecer menos recursos do que o previamente estabelecido em contrato, injustiçando assim seus clientes \cite{nuvem_sla:violacaoSLA}. Casos comuns de quebra de contrato no sentido dos provedores envolvem o não fornecimento de recursos como o prometido, principalmente tratando-se de poder computacional, quantidade de memória primária disponível, largura de banda e tempo de resposta.
+
+%Tais quebras de contrato derivam de fatores como alocação de \textit{hardware} inferior, compartilhamento das unidades físicas por diversos usuários ou simplesmente má intenção dos responsáveis por fornecer o serviço. 
 %
-Pelo outro lado, clientes que contratam o serviço podem também forjar dados de execução falsos, acusando os provedores de negligência no fornecimento do serviço e buscando com isso algum tipo de vantagem mercadológica ou jurídica.
+Pelo outro lado, clientes que contratam o serviço podem agir de maneira desonesta, acusando os provedores de negligência no fornecimento do serviço e buscando com isso algum tipo de vantagem mercadológica ou jurídica \cite{nuvem_sla:clientes_desonestos, nuvem_sla:clientes_desonestos2}.
 %
 Portanto, torna-se uma tarefa complexa aferir e julgar corretamente qual das partes envolvidas no contrato foi lesada e qual buscou um benefício ilícito em face de uma disputa contratual.
 
-Um protocolo, segundo a definição de Tanembaum de \citeyear{nuvem_sla:tanenbaum}, é um acordo entre as partes que se comunicam, estabelecendo como se dará a comunicação. Portanto, o protocolo proposto formalizará como as mensagens serão trocadas entre os clientes e os provedores, a ordem das mesmas, bem como seus formatos estruturais.
+Para tratar esse problema o presente trabalho propõe um protocolo, que segundo a definição de Tanembaum de \citeyear{nuvem_sla:tanenbaum}, é um acordo entre as partes que se comunicam, estabelecendo como se dará a comunicação. Portanto, o protocolo proposto formalizará como as mensagens serão trocadas entre os clientes e os provedores, a ordem das mesmas, bem como seus formatos estruturais.
 %
 %
-O protocolo será baseado em \textit{Blockchain} que busca garantir transparência para as transações e requisições entre provedores e clientes para alocação de microsserviços em ambientes \ac{IaaS}. É proposto também o desenvolvimento de um algoritmo distribuído sobre a cadeia que realize a conferência de uma reclamação, recompensando participantes que forneçam informações corretas e penalizando os que não o façam.
+O protocolo é baseado em Blockchain que busca garantir transparência para as transações e requisições entre provedores e clientes para alocação de microsserviços em ambientes \ac{IaaS}. É proposto também o desenvolvimento de um algoritmo distribuído sobre a cadeia que realize a conferência de uma reclamação, recompensando participantes que forneçam informações corretas e penalizando os que não o façam.
 %
-O uso de \textit{Blockchain} é justificado por sua habilidade de fomentar um ambiente distribuído com fácil verificação da existência e corretude de dados em um certo ponto no tempo. Tal característica torna possível auditar trocas de informação entre clientes e provedores, servindo como ponto de partida para a tomada de decisão a respeito de possíveis violações através do algoritmo proposto. Este, por sua vez, é centrado em uma votação assíncrona e distribuída, que utiliza como voto um histórico de monitoração mutuamente realizado por usuários e provedores, para inferir ocorrências de quebra de contrato resultantes da negligência do fornecedor.
-
+O uso de Blockchain é justificado por sua habilidade de fomentar um ambiente distribuído com fácil verificação da existência e corretude de dados em um certo ponto no tempo. Tal característica torna possível auditar trocas de informação entre clientes e provedores, servindo como ponto de partida para a tomada de decisão a respeito de possíveis violações através do algoritmo proposto. Este, por sua vez, é centrado em uma votação assíncrona e distribuída, que utiliza como voto um histórico de monitoração mutuamente realizado por usuários e provedores, para inferir ocorrências de quebra de contrato resultantes da negligência do fornecedor.
 %
 O trabalho então, possibilita com uma porcentagem de certeza alta e previsível afirmar se houve ou não violações de contratos - desde que firmados dentro da rede - enquanto faz uso das vantagens promovidas por tecnologias de armazenamento distribuído, troca de mensagens e votação.
 
-\clearpage
-
-
+%\clearpage
 %------------------------------------------------
 \section{Objetivos}
 
-\textbf{Objetivo geral}: Este trabalho tem como objetivo o desenvolvimento de um protocolo, baseado em
-\textit{Blockchain} para auxiliar a elaboração e auditoria de contratos entre usuários e provedores de IaaS para microsserviços.
+Este trabalho tem como objetivo o desenvolvimento de um protocolo, baseado em
+Blockchain para auxiliar a elaboração e auditoria de contratos entre usuários e provedores de IaaS para microsserviços.
 
 \vskip 0.5cm
 \noindent\textbf{Objetivos específicos}: 
 \begin{itemize}
     \item Realizar uma revisão bibliográfica sobre o gerenciamento de microsserviços provisionados em provedores de nuvem e na borda da Internet.
-    \item Realizar uma revisão bibliográfica sobre o estabelecimento de contratos usando \textit{Blockchain} em cenários competitivos e egoístas.
+    \item Realizar uma revisão bibliográfica sobre o estabelecimento de contratos usando Blockchain em cenários competitivos e egoístas.
     \item Identificar os elementos comuns no estabelecimento de contratos entre provedores de microsserviços e usuários.
     \item Especificar e desenvolver um protocolo para tal finalidade.
-    \item Implementar o protocolo usando um cenário existente de \textit{Blockchain}.
-    \item Realizar coleta de dados com intuito de quantificar o benefício da proposta.
+    \item Realizar um estudo sobre as ameaças ao protocolo com intuito de quantificar o benefício da proposta.
 \end{itemize}
 
 
 \section{Estrutura do Trabalho}
+
+Este trabalho é estruturado em quatro capítulos. No Capítulo \ref{ch:fundamentos}, trata-se a fundamentação teórica do presente trabalho, revisando conceitos relacionados à microsserviços e \textit{Blockchains} e suas características principais, bem como levantados trabalhos relacionados e comparados com a presente proposta. O Capítulo \ref{ch:proposta} concentra o desenvolvimento do presente trabalho, o cenário de execução, o conjunto de transações e definições técnicas gerais do protocolo proposto. No capítulo \ref{ch:ameaças} é apresentado um levantamento sobre as possíveis ameaças ao protocolo e como sua arquitetura as combate. O capítulo \ref{ch:implementacao} exibe um modelo base para implementação do protocolo através de diagramas e esquemas e por fim, no capítulo \ref{ch:conclusao} são apresentadas as considerações finais do presente trabalho..
+
+% TODO: atualizar após o acréscimo do novo capítulo.
