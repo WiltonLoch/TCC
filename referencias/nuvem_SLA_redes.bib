@@ -2,14 +2,33 @@
 % #                   LIVROS                 #
 % ############################################
 
-@book{nuvem_sla:tanenbaum,
-  title={Redes de computadores},
-  author={Tanenbaum, A.S. and Wetherall, D.J. and Translations, O.},
-  isbn={9788576059240},
-  url={https://books.google.com.br/books?id=fnfwkQEACAAJ},
-  year={2011},
-  publisher={PRENTICE HALL BRASIL}
+@InProceedings{nuvem_sla:vxdl,
+author="Koslovski, Guilherme Piegas
+and Primet, Pascale Vicat-Blanc
+and Char{\~a}o, Andrea Schwertner",
+editor="Vicat-Blanc Primet, Pascale
+and Kudoh, Tomohiro
+and Mambretti, Joe",
+title="VXDL: Virtual Resources and Interconnection Networks Description Language",
+booktitle="Networks for Grid Applications",
+year="2009",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="138--154",
+abstract="Data grid applications require often an access to infrastructures with high performance data movement facilities coordinated with computational resources. Other applications need interconnections of large scale instruments with HPC platforms. In these context, dynamic provisioning of customized computing and networking infrastructure as well as resource virtualization are appealing technologies. Therefore new models and tools must be studied and developed to allow users create and handle such on-demand virtual infrastructures within grid platforms or even within the Internet. This work presents VXDL, a language for virtual resources interconnection networks specification and modeling. Besides allowing end resources description, VXDL lets users describe the desirable virtual network topology, including virtual routers and timeline. In this paper we motivate and present the key features of our modeling language. We explore typical examples to demonstrates the expressiveness and the pertinence of it. Then we detail experimental results based on the execution of NAS benchmark on virtual infrastructures, conforming different VXDL specifications.",
+isbn="978-3-642-02080-3"
 }
+
+
+
+@book{nuvem_sla:tanenbaum,
+ author = {Tanenbaum, Andrew},
+ title = {Computer Networks},
+ year = {2002},
+ isbn = {0130661023},
+ edition = {4th},
+ publisher = {Prentice Hall Professional Technical Reference},
+} 
 
 @book{nuvem_sla:cloud_native_inf,
  author = {Garrison, Justin \& Nova, Kris},
@@ -34,14 +53,36 @@ eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118691779.ch2},
 year = {2014},
 }
 
+@book{stallings,
+  Author = {William Stallings},
+  Title = {Criptografia e Seguranca de Redes: Principios e Praticas},
+  Publisher = {Pearson},
+  Year = {2014},
+  ISBN = {8543005892},
+  URL = {https://www.amazon.com/Criptografia-Seguranca-Redes-Principios-Praticas/dp/8543005892?SubscriptionId=AKIAIOBINVZYXZQZ2U3A\&tag=chimbori05-20\&linkCode=xm2\&camp=2025\&creative=165953\&creativeASIN=8543005892}
+}
+
 % ############################################
 % #                  ARTIGOS                 #
 % ############################################
 
+@ARTICLE{nuvem_sla:padrao_i3e,
+author={},
+journal={IEEE Std 754-2008},
+title={IEEE Standard for Floating-Point Arithmetic},
+year={2008},
+volume={},
+number={},
+pages={1-70},
+keywords={floating point arithmetic;IEEE standards;programming;IEEE standard;decimal floating-point arithmetic;computer programming;arithmetic formats;IEEE Standards;Floating-point arithmetic;Microprocessors;Software;Hardware;Trademarks;754-2008;arithmetic;binary;computer;decimal;exponent;floating-point;format;interchange;NaN;number;rounding;significand;subnormal},
+doi={10.1109/IEEESTD.2008.4610935},
+ISSN={},
+month={Aug},}
+
 @article{nuvem_sla:edge_computing,
  author = {Garcia Lopez, Pedro and Montresor, Alberto and Epema, Dick and Datta, Anwitaman and Higashino, Teruo and Iamnitchi, Adriana and Barcellos, Marinho and Felber, Pascal and Riviere, Etienne},
  title = {Edge-centric Computing: Vision and Challenges},
- journal = {SIGCOMM Comput. Commun. Rev.},
+ journal = {SIGCOMM Computer Communication Review},
  issue_date = {October 2015},
  volume = {45},
  number = {5},
@@ -62,6 +103,7 @@ year = {2014},
  author = {Mell, Peter M. and Grance, Timothy},
  title = {SP 800-145. The NIST Definition of Cloud Computing},
  year = {2011},
+ institution={National Institute of Standards and Technology},
  publisher = {National Institute of Standards and Technology},
  address = {Gaithersburg, MD, United States},
 }
@@ -91,6 +133,7 @@ doi = {10.5120/ijca2016907483}
 
 @techreport{nuvem_sla:nist_broker,
   title={NIST Cloud Computing Standards Roadmap},
+  institution={National Institute of Standards and Technology},
   author={Sokol, Annie W and Hogan, Michael D},
   year={2013}
 }
@@ -141,6 +184,39 @@ doi = {10.1109/CCGrid.2012.116}
  keywords = {Border Gateway Protocol, Content Distribution Network, Internet Routing, Software Defined Networking, Traffic Engineering},
 } 
 
+@inproceedings{nuvem_sla:faas,
+  title={A SPEC RG cloud group's vision on the performance challenges of FaaS cloud architectures},
+  author={Van Eyk, Erwin and Iosup, Alexandru and Abad, Cristina L and Grohmann, Johannes and Eismann, Simon},
+  booktitle={Companion of the 2018 ACM/SPEC International Conference on Performance Engineering},
+  pages={21--24},
+  year={2018},
+  organization={ACM}
+}
+
+@ARTICLE{nuvem_sla:clientes_desonestos, 
+author={H. Zhang and H. Jiang and B. Li and F. Liu and A. V. Vasilakos and J. Liu}, 
+journal={IEEE Transactions on Computers}, 
+title={A Framework for Truthful Online Auctions in Cloud Computing with Heterogeneous User Demands}, 
+year={2016}, 
+volume={65}, 
+number={3}, 
+pages={805-818},
+doi={10.1109/TC.2015.2435784}, 
+ISSN={0018-9340}, 
+month={March},}
+
+@ARTICLE{nuvem_sla:clientes_desonestos2, 
+author={W. Shi and L. Zhang and C. Wu and Z. Li and F. C. M. Lau}, 
+journal={IEEE/ACM Transactions on Networking}, 
+title={An Online Auction Framework for Dynamic Resource Provisioning in Cloud Computing}, 
+year={2016}, 
+volume={24}, 
+number={4}, 
+pages={2060-2073}, 
+doi={10.1109/TNET.2015.2444657}, 
+ISSN={1063-6692}, 
+month={Aug},}
+
 % ############################################
 % #                  SITES                   #
 % ############################################
@@ -150,6 +226,13 @@ doi = {10.1109/CCGrid.2012.116}
     title = {Produtos em nuvem},
     year = {2019},
     note = {disponível em:\textless https://aws.amazon.com/pt/products/\textgreater. Acesso em: 26 mai. 2019},
+}
+
+@misc{nuvem_sla:cloudformation,
+    author = {Amazon},
+    title = {AWS CloudFormation},
+    year = {2019},
+    note = {disponível em:\textless https://aws.amazon.com/pt/cloudformation/\textgreater. Acesso em: 15 jun. 2019},
 }
 
 @misc{nuvem_sla:precos_amazon,
@@ -171,6 +254,30 @@ doi = {10.1109/CCGrid.2012.116}
     title = {Lista de preços},
     year = {2019},
     note = {disponível em:\textless https://cloud.google.com/pricing/list?hl=pt-br\textgreater. Acesso em: 26 mai. 2019},
+}
+
+@book{nuvem_sla:iasc,
+  title={Infrastructure as Code: Managing Servers in the Cloud},
+  author={Morris, K.},
+  isbn={9781491924358},
+  lccn={2016461531},
+  url={https://books.google.com.br/books?id=kOnurQEACAAJ},
+  year={2016},
+  publisher={O'Reilly Media}
+}
+
+@misc{nuvem_sla:heat,
+    author = {OpenStack},
+    title = {Heat documentation},
+    year = {2018},
+    note = {disponível em:\textless https://docs.openstack.org/heat/latest/\textgreater. Acesso em: 15 jun. 2019},
+}
+
+@misc{nuvem_sla:docker_hub,
+    author = {Docker},
+    title = {Docker Hub},
+    year = {2019},
+    note = {disponível em:\textless https://hub.docker.com/\textgreater. Acesso em: 15 jun. 2019},
 }
 
 @misc{nuvem_sla:netflix_borda,
