@@ -5,7 +5,7 @@ Este capítulo destina-se a explanar a proposta para o problema apresentado. De 
 
 % A Seção \ref{sec:proposta:exemplo} apresenta um exemplo prático do funcionamento e por fim, após a definição do protocolo, são apresentadas na Seção \ref{sec:proposta:ameacas} ameaças que podem afetar seu funcionamento correto.
 
-TODO: ajustar o texto após a reorganização. A Seção 3.7 será transformada em novo capítulo.
+% TODO: ajustar o texto após a reorganização. A Seção 3.7 será transformada em novo capítulo.
 
 % as justificativas a respeito de cada escolha são explanadas na Seção \ref{}. 
 
@@ -63,7 +63,7 @@ Outra grande desvantagem é o custo relacionado a todo o processo de mineração
 Com base em tais análises, a forma de consenso provavelmente explorada pelo protocolo deve ser naturalmente menos agressiva nos termos de consumo energético e de recursos dos participantes.
 
 %
-Assim, alternativas interessantes para uso no presente trabalho são formas de consenso baseadas em falhas bizantinas como o \ac{pBFT} ou sBFT - possivelmente utilizando um número reduzido de participantes no consenso para amenizar problemas de escalabilidade - ou formas baseadas no modelo de \ac{PoS}, adotando-se uma das versões alteradas.
+Assim, alternativas interessantes para uso no presente trabalho são formas de consenso baseadas em tolerância de falhas bizantinas como o \ac{pBFT} - possivelmente utilizando um número reduzido de participantes no consenso para amenizar problemas de escalabilidade - ou formas baseadas no modelo de \ac{PoS}, adotando-se uma das versões alteradas.
 A implementação do consenso é indicada como trabalho futuro.
 
 \subsection{Reputação dos Usuários}
@@ -77,19 +77,18 @@ A reputação dos usuários é um dos fins maiores do protocolo pois trata-se do
 %
 Como não há possibilidade de um usuário deliberadamente transferir pontos a outro, a reputação dos mesmos não precisa ser expressa na forma de transações gravadas na cadeia, sendo então apenas construída através de informações contidas em transações de outros gêneros. 
 %
-A representação adotada trata-se de um valor que varia de 0 a 1000, cujos limites são referentes ao mínimo e máximo possível de reputação, respectivamente. A alternativa do uso de limites para a reputação, principalmente o superior, é escolhida para evitar que prestadores antigos acumulem valores de reputação muito altos que não possam ser alcançados por prestadores novos, o que criaria um cenário enviesado de venda de serviços que não poderia ser facilmente modificado.
+A representação adotada trata-se de um valor que varia de 0 a 100, cujos limites são referentes ao mínimo e máximo possível de reputação, respectivamente. A alternativa do uso de limites para a reputação, principalmente o superior, é escolhida para evitar que prestadores antigos acumulem valores de reputação muito altos que não possam ser alcançados por prestadores novos, o que criaria um cenário enviesado de venda de serviços que não poderia ser facilmente modificado.
 %
 
-Inicialmente, todos os usuários que ingressam na rede recebem um valor mediano de reputação equivalente a 500 pontos, uma vez que não é possível julgar a priori se esse usuário tem tendências direcionadas a um comportamento honesto ou não e assim atribuições de valores mais altos ou baixos seriam injustas. Qualquer usuário ganha reputação através de votações e de contratos, cuja validade é comprovada em alguma votação e perde reputação apenas através da primeira. O valor em pontos de reputação recebido por prestadores de serviço e clientes mediante a criação de contratos decai geometricamente conforme a quantidade dos mesmos sobe. O valor inicial recebido no primeiro contrato é predefinido e trata-se de uma porcentagem pouco significativa quando comparada com o máximo possível de reputação. 
+Inicialmente, todos os usuários que ingressam na rede recebem um valor mediano de reputação equivalente a 50 pontos, uma vez que não é possível julgar a priori se esse usuário tem tendências direcionadas a um comportamento honesto ou não e assim atribuições de valores mais altos ou baixos seriam injustas. Qualquer usuário ganha reputação através de votações e de contratos, cuja validade é comprovada em alguma votação e perde reputação apenas através da primeira. O valor em pontos de reputação recebido por prestadores de serviço e clientes mediante a criação de contratos é constante. O valor de recompensa atribuído a cada contrato é predefinido e trata-se de uma porcentagem não significativa quando comparada com o máximo possível de reputação. 
 
 Há entretanto a necessidade de criar uma forma de limitação para o cálculo do máximo possível de reputação acumulável por um usuário pois em termos práticos, nada impede que a soma dos valores recebidos por contratos e por vitórias de votações resultem em valores maiores que o máximo de reputação permitida. Assim, ao ser exibido a qualquer outro participante o valor de reputação de tal usuário seria o máximo, mas o valor prático e real construído a partir dos processos ocorridos na rede seria possivelmente maior, fazendo com que posteriores perdas de reputação em votações não surtissem efeito na reputação efetiva do usuário já que o resultado ainda seria superior ao máximo. Portanto, a forma de criação da reputação de um usuário consiste em uma reconstrução de sua história na rede até o momento e para tal devem ser recuperadas localmente ou através da rede todas as transações de fechamento de contrato e de veredito de uma votação que certo usuário tenha se envolvido.
 
 \begin{algorithm}[h]
 \Entrada{Endereço do usuário $u$}
 \Saida{Valor em pontos de reputação $r$}
- $r \gets 500$\;
- $v \gets 50$\;
- $\alpha \gets 0.5$\;
+ $r \gets 50$\;
+ $v \gets 2$\;
  $CS \gets \{\oslash\}$\;
  $VT \gets \{\oslash\}$\;
  $CS \gets$ buscarContratos($u$)\;
@@ -100,9 +99,9 @@ Há entretanto a necessidade de criar uma forma de limitação para o cálculo d
  \Para{cada $T_i \in T$}{
     \eSe{$T_i \in CS$}{
         $j \gets$ posiçãoNoConjunto($T_i$, $CS$)\;
-        $r \gets \min(1000, r + \frac{v}{\alpha j + 1})$\;
+        $r \gets \min(100, r + v)$\;
     }{
-        $r \gets \min(1000, r + valor(T_i, u))$\;
+        $r \gets \min(100, r + valor(T_i, u))$\;
     }
  }
  \Retorna $r$
@@ -110,7 +109,7 @@ Há entretanto a necessidade de criar uma forma de limitação para o cálculo d
  \label{alg:rep}
 \end{algorithm}
 
-O algoritmo \ref{alg:rep} apresenta um fluxo de execução básico para a construção da reputação de qualquer usuário, no qual $r$ é o valor de reputação, $v$ é a recompensa padronizada atribuída ao primeiro contrato de qualquer usuário, $\alpha$ é o coeficiente de decaimento da recompensa, $CS$ é o conjunto de transações de fechamento de contrato cujo referente cliente já convocou uma votação ou votou utilizando dados do contrato e $VT$ é o conjunto de transações que contem alguma transferência para aquele usuário. As funções \textit{buscarContratos} e \textit{buscarTransferências} procuram transações para $CS$ e $VT$, respectivamente, primeiro de forma local e se não encontradas requisitam-nas da rede. A função \textit{ordenarPorTempo} ordena um conjunto de transações pela sua estampa de tempo de publicação na cadeia, da mais antiga à mais recente. Por fim, a função \textit{posiçãoNoConjunto} retorna a posição de uma transação em um conjunto.
+O Algoritmo \ref{alg:rep} apresenta um fluxo de execução básico para a construção da reputação de qualquer usuário, no qual $r$ é o valor de reputação, $v$ é a recompensa padronizada atribuída ao contrato de qualquer usuário, no qual o valor de $2$ pontos é aqui definido de maneira ilustrativa e valores em implantações reais poderiam ser diferentes. $CS$ é o conjunto de transações de fechamento de contrato cujo referente cliente já convocou uma votação ou votou utilizando dados do contrato e $VT$ é o conjunto de transações que contem alguma transferência para aquele usuário. As funções \textit{buscarContratos} e \textit{buscarTransferências} procuram transações para $CS$ e $VT$, respectivamente, primeiro de forma local e se não encontradas requisitam-nas da rede. A função \textit{ordenarPorTempo} ordena um conjunto de transações pela sua estampa de tempo de publicação na cadeia, da mais antiga à mais recente. Por fim, a função \textit{posiçãoNoConjunto} retorna a posição de uma transação em um conjunto.
 
 \subsection{Dados Comuns das Transações}
 \label{subsec:campos_comuns}
@@ -426,10 +425,12 @@ Um processo significativo que acontece na fase de auditoria é a movimentação 
 \subsection{Módulo de Monitoração}
 \label{sec:proposta:monitoracao}
 
-O módulo de monitoração é um dos grandes componentes da rede e existe como um apêndice da carteira de cada usuário, devendo ser alocado junto a infraestrutura contratada pelo cliente para realizar o processo de monitoração devidamente. A coleta dos dados é feita através de um processo de estresse na infraestrutura, que busca levá-la a utilização máxima de seus recursos para atestar a entrega completa do acordado em contrato. A periodicidade das monitorações é definida de maneira prévia e todos os módulos operam na mesma frequência, garantindo assim que a diferença temporal máxima entre as últimas monitorações de dois módulos distintos é sempre menor ou igual a um período. Portanto, se por exemplo a frequência de monitoração é de um teste a cada 10 minutos, naturalmente a diferença máxima entre as últimas monitorações de dois usuários distintos pode ser de, no máximo, 10 minutos.
+O módulo de monitoração é um dos grandes componentes da rede e existe como um apêndice da carteira de cada usuário, devendo ser alocado junto a infraestrutura contratada pelo cliente para realizar o processo de monitoração. A coleta dos dados é feita através de um processo de estresse na infraestrutura, que busca levá-la a utilização máxima de seus recursos para atestar a entrega completa do acordado em contrato. A periodicidade das monitorações é definida de maneira prévia e todos os módulos operam na mesma frequência, garantindo assim que a diferença temporal máxima entre as últimas monitorações de dois módulos distintos é sempre menor ou igual a um período. Portanto, se por exemplo a frequência de monitoração é de um teste a cada 10 minutos, naturalmente a diferença máxima entre as últimas monitorações de dois usuários distintos pode ser de, no máximo, 10 minutos.
 
 %
-No que diz respeito ao intervalo em si, a possibilidade do uso de períodos de tempo muito elevados não possuiria utilidade prática pois os dados resultantes não seriam consistentes. Esse fato se manifesta porque a própria esparsidade dos testes abrangeria frações muito pequenas de utilização dos recursos quando comparadas ao tempo total não monitorado, dificultando a convergência de dados provenientes de diferentes usuários sobre a frequência ou até mesmo ocorrência de quebras. Assim, como com uma periodicidade muito baixa a disparidade nos horários de realização de testes tenderia a ser muito grande, o uso de intervalos curtos na ordem de minutos é correto e deve ser empregado. 
+% No que diz respeito ao intervalo em si, a possibilidade do uso de períodos de tempo muito elevados não possuiria utilidade prática pois os dados resultantes não seriam consistentes. Esse fato se manifesta porque a própria esparsidade dos testes abrangeria frações muito pequenas de utilização dos recursos quando comparadas ao tempo total não monitorado, dificultando a convergência de dados provenientes de diferentes usuários sobre a frequência ou até mesmo ocorrência de quebras. Assim, como com uma periodicidade muito baixa a disparidade nos horários de realização de testes tenderia a ser muito grande, o uso de intervalos curtos na ordem de minutos é correto e deve ser empregado. 
+
+% TODO: não concordo muito com tal discussão. Existe uma linha de pesquisa especifica sobre monitoramento de recursos. Parece perigoso afirmar tal raciocínio sem conhecer a aplicação alvo. A carga da aplicação. Enfim, vamos pensar, mas podemos remover a discussão (parágrafo anterior).
 
 %
 A primeira vista, a comparação de monitorações realizadas em dispositivos diferentes sem sincronização de relógio pode parecer incoerente, porém com períodos de tempo relativamente pequenos e contextos de monitoração presumidamente semelhantes em casos de quebra de contrato, como apontado na Seção \ref{sec:proposta:definicoes}, é bastante improvável que violações não sejam detectadas em múltiplos dados de monitoração diferentes.
@@ -437,14 +438,18 @@ A primeira vista, a comparação de monitorações realizadas em dispositivos di
 %
 Os dados coletados pelo módulo são guardados localmente na infraestrutura contratada e somente são enviados para a carteira ou de forma geral ao dono dos mesmos mediante uma requisição explícita para tal. O módulo possui um par de chaves assimétricas privada e pública, sendo a chave privada igual para todos os módulos de todos usuários e podendo ser armazenada em algum local do código fonte ou construída secretamente dentro de um sistema de enclaves criptográficos. O propósito e utilização do par de chaves do módulo é garantir a confidencialidade das informações mantidas por ele localmente, que são criptografadas utilizando-se de sua chave pública. Assim, mesmo que os dados sejam descobertos ou copiados do disco, o atacante ou invasor não conseguiria ver o texto em claro devido à falta da chave privada, que é conhecida apenas pelo módulo em sua execução. O par de chaves ainda possui outros usos que são apresentados na Subseção \ref{subsec:proposta:votacao_detalhada}.
 
-%
-Internamente, o módulo armazena todos os dados de monitoração colhidos durante um determinado período preestabelecido, sejam eles comprobatórios ou não de ocasionais quebras. A organização é dividida em arquivos, de modo que cada um dos possíveis componentes suscetíveis à violação como quantidade de RAM, processamento, vazão, \textit{jitter}, \textit{etc}, sejam indexados em um arquivo individualizado. Dentro de cada arquivo há uma série de linhas de dados que resumem o histórico dos resultados de testes individuais para aquela categoria. Uma linha é composta por:
-\begin{itemize}
-    \item Um número de série ou índice, que deve obrigatoriamente ser maior que o da linha anterior e menor que o da linha seguinte, servindo como indicação de que não houve alteração ou adição indevida de testes na linha do tempo.
-    \item Um valor normalizado em porcentagem que indica o resultado do teste em si, de modo que ao atingir números próximos de 100\% considera-se que não houveram violações do acordado e ao atingir números inferiores, considera-se que houveram violações cuja gravidade é proporcional ao quão próximo de 0\% o resultado chegou.
-\end{itemize}
+% TODO: você indicou uma divisão em arquivos. Mas seria uma proposta de implementação, certo? Não é relacionado com a rede em si. Podemos simplificar?
 
-Para que o usuário saiba quando houve uma quebra de contrato em sua infraestrutura e possa iniciar uma votação, o módulo é capaz de enviar alertas que indicam qual dos aspectos da infraestrutura foram violados, porém sem especificar qual a porcentagem exata ou a frequência relacionada a essa violação. O mecanismo de alerta binário ao invés de multivalorado é empregado para evitar que o usuário dono dos dados posso visualizar os mesmos e divulgá-los a outros participantes. Essa ação por si só não representaria um problema ou vulnerabilidade de segurança, mas poderia contribuir para a prática de outros ataques prejudiciais ao protocolo. Também é importante salientar que objetivando o não surgimento de todo um novo conjunto de problemas de comunicação e concorrência, os módulos operam segundo uma diretiva \textit{standalone} sem troca de informações entre si e o envio de alertas e dados ao usuário são as únicas ações desempenhadas que envolvem comunicação com qualquer contexto externo à infraestrutura sob vigilância. 
+%
+Internamente, o módulo armazena todos os dados de monitoração colhidos durante um determinado período preestabelecido, sejam eles comprobatórios ou não de ocasionais quebras. Os dados armazenados devem conter um registro individual de cada teste, de modo a evitar o uso repetido de monitorações já utilizados em uma votação e naturalmente um valor de porcentagem para aquele aspecto, indicando se o fornecimento foi adequado ou não.
+
+% A organização é dividida em arquivos, de modo que cada um dos possíveis componentes suscetíveis à violação como quantidade de RAM, processamento, vazão, \textit{jitter}, \textit{etc}, sejam indexados em um arquivo individualizado. Dentro de cada arquivo há uma série de linhas de dados que resumem o histórico dos resultados de testes individuais para aquela categoria. Uma linha é composta por:
+% \begin{itemize}
+    % \item Um número de série ou índice, que deve obrigatoriamente ser maior que o da linha anterior e menor que o da linha seguinte, servindo como indicação de que não houve alteração ou adição indevida de testes na linha do tempo.
+    % \item Um valor normalizado em porcentagem que indica o resultado do teste em si, de modo que ao atingir números próximos de 100\% considera-se que não houveram violações do acordado e ao atingir números inferiores, considera-se que houveram violações cuja gravidade é proporcional ao quão próximo de 0\% o resultado chegou.
+% \end{itemize}
+
+Para que o usuário saiba quando houve uma quebra de contrato em sua infraestrutura e possa iniciar uma votação, o módulo é capaz de enviar alertas que indicam qual dos aspectos da infraestrutura foram violados, porém sem especificar qual a porcentagem exata ou a frequência relacionada a essa violação. O mecanismo de alerta binário ao invés de multivalorado é empregado para amenizar a possibilidade de que o usuário dono dos dados possa visualizar os mesmos e divulgá-los a outros participantes. Essa ação por si só não representaria um problema ou vulnerabilidade de segurança, mas poderia contribuir para a prática de outros ataques prejudiciais ao protocolo. Também é importante salientar que objetivando o não surgimento de todo um novo conjunto de problemas de comunicação e concorrência, os módulos operam segundo uma diretiva \textit{standalone} sem troca de informações entre si e o envio de alertas e dados ao usuário são as únicas ações desempenhadas que envolvem comunicação com qualquer contexto externo à infraestrutura sob vigilância. 
 
 %
 Quando o envio dos dados é requisitado pelo usuário o módulo não simplesmente transmite os dados criptografados por sua chave pública para o dono, pois embora o objetivo da não descoberta dos dados para compartilhamento prematuro seja garantido, também não seria possível que nenhum usuário participante do processo de votação visualizasse esses dados em nenhum momento, inviabilizando o procedimento como um todo. Para evitar esse problema e ainda garantir a não descoberta utiliza-se uma espécie de chave de sessão - intitulada "chave de votação" a partir do presente momento pela maior proximidade do termo com o uso real no protocolo - para criptografar os dados para envio. Além do conteúdo dos arquivos de um aspecto, adiciona-se à mensagem o \textit{hash} de uma série de informações pertinentes da infraestrutura em que o módulo está sendo executado, isso com o objetivo de garantir a efetividade das provas de monitoração, impedindo que usuários enviem votos com dados provenientes de infraestruturas diferentes das quais as votações foram convocadas e impossibilitar a forja de dados em máquinas inferiores. O processo completo e detalhado de construção dos dados, criação da chave de votação, tradução para envio e visualização conjunta pelos usuários para o veredito é abordado na Seção \ref{subsec:proposta:votacao_detalhada}.
@@ -453,7 +458,7 @@ Quando o envio dos dados é requisitado pelo usuário o módulo não simplesment
 Por fim, Alvorada pode atuar em conjunto com qualquer módulo de monitoração eventualmente disponível.
 
 \subsection{Chaves de Votação}
-\label{subsec:sss}
+\label{subsec:chaves_votacao}
 
 Como já mencionado nesta seção os dados coletados pelo módulo de monitoração de um usuário não devem ser visíveis aos outros participantes antes que períodos relativamente avançados da votação sejam atingidos ou esta seja finalizada. Essa medida evita o compartilhamento de informações relevantes, que podem criar meios para um processo de emulação de dados nocivos ao veredito. A finalidade do par de chaves de votação é justamente contornar esse problema, assim o módulo utiliza a respectiva chave privada para traduzir os dados armazenados para uma versão criptografada que seja posteriormente visualizável por todos os participantes. 
 
@@ -463,7 +468,7 @@ Para que seja possível um consenso coletivo sobre esses conjuntos de dados clar
 Tanto o primeiro quanto segundo campos tratam-se simplesmente de dois valores aleatórios de 32 \textit{bytes} criptografados individualmente pela chave pública do módulo. O responsável pela geração da primeira parcela da semente deve ser o prestador de serviço e para cada nova proposta de serviço enviada à cadeia deve ser informado também o primeiro valor da semente - portado no segundo campo da transação de \ac{PS} - que será utilizado para a tradução dos dados em futuras votações contra a mesma, caso venha a ser contratada. O segundo campo deve ser informado pelo usuário - portado no quarto campo da \ac{CV} - e garante que os pares de chaves de votação usados em convocações anteriores movidas por aquele usuário não serão repetidos na transação atual ou próximas transações contra um mesmo serviço fornecido, evitando também a disparidade de poderes de conhecimento entre usuários e prestadores de serviço.
 
 %
-A geração da chave privada completa é então feita através da descriptografia do primeiro e segundo campos através da chave privada do módulo, sendo a chave resultante utilizada para criptografar os dados e enviá-los ao usuário. Para construir a chave pública é utilizada multiplicação em curva elíptica da então construída chave privada por um gerador predefinido na curva, como mostrado na subseção \ref{subsec:ecc}.
+A geração da chave privada completa é então feita através da descriptografia do primeiro e segundo campos através da chave privada do módulo, possuindo os dois valores em claro o módulo concatena-os e criptografa o novo valor com sua chave privada, assim o valor criptografado resultante será utilizado como chave de votação para criptografar os dados e enviá-los ao usuário. Para construir a chave pública é utilizada multiplicação em curva elíptica da então construída chave privada por um gerador predefinido na curva, como mostrado na subseção \ref{subsec:ecc}.
 
 %
 % Uma vez que o usuário obtêm os dados criptografados deve-se também haver uma forma de receber a chave pública quando o momento for correto para que os dados possam ser visualizados. Entretanto, apenas enviar a chave diretamente ao usuário, junto com os dados por exemplo, não seria eficaz e todo o propósito da criptografia em si se perderia. Para tratar dessa questão é utilizado um sistema criptográfico de limiares, ou esquema de limiares. Os esquemas de limiares para compartilhamento de segredos foram propostos por \citeonline{blockchain:secret_sharing} e consistem de uma forma de dividir um segredo numérico em $n$ partes de forma que possuindo qualquer conjunto de $t$ partes contido em $n$ é possível que o segredo seja reconstruído. Contudo, ao possuir qualquer conjunto com quantidade de partes inferior a $t$ não é possível obter informação de nenhum modo sobre o segredo protegido.
@@ -507,7 +512,7 @@ A geração da chave privada completa é então feita através da descriptografi
 \subsection{Fluxo de Votação Detalhado}
 \label{subsec:proposta:votacao_detalhada}
 
-O processo de votação, embora resida majoritariamente na fase de auditoria, certas características importantes para seu funcionamento se expandem também para a fase de contrato, como mostrado na Seção \ref{subsec:sss}. Aqui o processo completo de votação envolvendo todas as interações entre diferentes usuários é expressado na Figura \ref{fig:votacao_detalhada}.
+O processo de votação, embora resida majoritariamente na fase de auditoria, certas características importantes para seu funcionamento se expandem também para a fase de contrato, como mostrado na Seção \ref{subsec:chaves_votacao}. Aqui o processo completo de votação envolvendo todas as interações entre diferentes usuários é expressado na Figura \ref{fig:votacao_detalhada}.
 
 \begin{figure}[ht!]
 \caption{Fluxo completo do processo de votação.}
@@ -603,7 +608,7 @@ A abordagem utilizando índices é possível nesse caso específico pois como em
 O quarto campo indica qual microsserviço ou infraestrutura específica sofreu a quebra e está presente para indicar aos outros usuários que dados devem ser enviados. O quinto campo informa o quesito em que houve a quebra, podendo ser RAM, frequência de processador, armazenamento, \textit{etc}. O sexto campo dita o período ou a quantidade de testes realizados pelo usuário acusador, que são fortemente correlatos com o tamanho dos dados e indicam aos outros usuários e aos seus módulos qual o período de votação que deve ser enviado. O sétimo campo indica a quantidade máxima de blocos a partir do bloco em que essa transação é inserida em que votos são aceitos para essa votação. O oitavo campo indica o valor mínimo de aposta de reputação que deve ser feito por qualquer usuário que deseja enviar um voto e também equivale ao valor que está sendo apostado pelo cliente acusador em si. O nono campo indica o tamanho da assinatura seguinte, para que seja possível realizar o processo de serialização. O décimo campo consiste da assinatura criada pelo módulo utilizando sua chave privada para esse conjunto de dados específico, atestando que sua origem é legítima. O décimo primeiro campo trata o tamanho dos dados e está presente para fins de serialização. O décimo segundo e último campo tratam-se dos dados criptografados estabelecidos como prova e motivo dessa convocação de votação. A verificação de uma convocação de votação é exibida no fluxograma contido na Figura \ref{fig:validacao_cv}.
 
 \begin{figure}[ht!]
-\caption{Fluxograma para validação de uma Confirmação de Serviço.}
+\caption{Fluxograma para validação de uma Convocação de Votação.}
 \centering
 \includegraphics[width=0.8\textwidth]{imagens/validacao_cv.png}
 \begin{center}
@@ -619,7 +624,7 @@ Transações de \ac{CV} podem ser respondidas única e exclusivamente por votos 
 \subsection{Voto}
 \label{sec:proposta:auditoria:voto}
 
-O voto trata-se da fase subsequente do processo de auditoria. Votos podem ser enviados por todos os tipos de usuários desde que o voto seja condizente com a acusação, ou seja, os dados de monitoração se refiram ao provedor acusado e a infraestrutura em questão seja a mesma. Os votos carregam uma parte específica dos dados criptografados que refletem a monitoração feita por aquele usuário, seja ele cliente ou prestador de serviço e usuários pertencentes a grupos diferentes têm igual importância e chance de afetar o resultado final. Os campos utilizados por essa transação são expressos na tabela \ref{tabela:voto}.
+O voto trata-se da fase subsequente do processo de auditoria. Votos podem ser enviados por todos os tipos de usuários desde que o voto seja condizente com a acusação, ou seja, os dados de monitoração se refiram ao provedor acusado e a infraestrutura em questão seja a mesma. Os votos carregam uma parte específica dos dados criptografados que refletem a monitoração feita por aquele usuário, seja ele cliente ou prestador de serviço e usuários pertencentes a grupos diferentes têm igual importância e chance de afetar o resultado final. Os campos utilizados por essa transação são expressos na Tabela \ref{tabela:voto}.
 
 \begin{table}[ht]
 \centering
@@ -647,17 +652,20 @@ O voto trata-se da fase subsequente do processo de auditoria. Votos podem ser en
 O primeiro campo indica o \textit{hash} da transação de convocação de votação correspondente ao qual o voto é destinado. O segundo campo indica o valor em pontos de reputação que será apostado pelo usuário no processo de votação ao qual o voto se refere, devendo obrigatoriamente ser maior ou igual ao valor de aposta mínima definido pelo usuário acusador. O terceiro campo indica o tamanho da assinatura seguinte, estando presente por propósitos de serialização. O quarto campo consiste da assinatura criada pelo módulo para esse conjunto de dados específico, atestando que sua origem é legítima. O quinto campo indica o tamanho dos dados e novamente existe por propósitos de serialização. O sexto campo compreende os dados criptografados criados e traduzidos pelo módulo destinados a servir como prova e voto.
 
 %
-A validação da transação de voto é relativamente simples, primeiramente os campos comuns são verificados e em seguida carrega-se a convocação de votação relativa para que seja possível atestar se o período de votação ainda continua aberto. Verifica-se então se o usuário tem reputação suficiente para realizar a aposta indicada no voto e por fim, é verificada se suposta assinatura do módulo está correta. Se todas os requisitos de validação são atendidos a transação é considerada válida. A transação de voto pode apenas ser referenciada por uma transação de \ac{VT} criada por um usuário ou prestador de serviço.
+A validação da transação de voto é relativamente simples, primeiramente os campos comuns são verificados e em seguida carrega-se a convocação de votação relativa para que seja possível atestar se o período de votação ainda continua aberto e se a votação indicada de fato existe. Verifica-se então se o usuário tem reputação suficiente para realizar a aposta indicada no voto e por fim, é verificada se a suposta assinatura do módulo está correta. Se todas os requisitos de validação são atendidos a transação é considerada válida. A transação de voto pode apenas ser referenciada por uma transação de \ac{VT} criada por um usuário ou prestador de serviço.
 
 % entretanto um valor que decide a influência que um voto terá comparado aos outros é a frequência e quantidade de monitorações contidas nos dados anexados.
 
 \subsection{Veredito e Transferências}
 \label{sec:proposta:auditoria:vt}
 
-A parte final da fase de auditoria e consequentemente de um ciclo completo do protocolo é a construção do veredito a respeito da violação do contrato, as alterações dos pontos de reputação para os usuários envolvidos, seja em caso de acréscimo ou decréscimo no total individual. Uma vez que o período de votação acabou e existe certa quantidade de votos na cadeia é possível calcular, baseando-se nos dados fornecidos pelos usuários envolvidos, a probabilidade real de um provedor ter violado o contrato. Para tal, os dados probabilísticos de violações de cada usuário são usados para construir uma média de probabilidade, que representa a visão indutiva da rede sobre aquele nível de quebra. Através do uso da média e do desvio padrão dos dados oriundos dos usuários, é possível inferir quais as chances do nível e probabilidade de quebra apontadas pelo acusador realmente acontecerem. A partir dessa inferência cria-se o veredito a respeito da culpa do prestador de serviço em questão. Se o provedor for considerado culpado ele perde o valor mínimo da aposta, caso contrário, quem perde é o cliente acusador. 
+A parte final da fase de auditoria e consequentemente de um ciclo completo do protocolo é a construção do veredito a respeito da violação do contrato, as alterações dos pontos de reputação para os usuários envolvidos, seja em caso de acréscimo ou decréscimo no total individual. Uma vez que o período de votação acabou e existe certa quantidade de votos na cadeia é possível calcular, baseando-se nos dados fornecidos pelos usuários envolvidos, a probabilidade real de um provedor ter violado o contrato. Para tal, os dados probabilísticos de violações de cada usuário são usados para construir uma média de probabilidade, que representa a visão concêntrica e indutiva da rede sobre aquele nível de quebra. Através do uso da média e do desvio padrão dos dados oriundos dos usuários, é possível inferir quais as chances do nível e probabilidade de quebra apontadas pelo acusador realmente acontecerem. A partir dessa inferência cria-se o veredito a respeito da culpa do prestador de serviço em questão. Se o provedor for considerado culpado ele perde o valor mínimo da aposta que é dividido entre o acusador e todos os votantes, caso contrário, quem perde é o cliente acusador. No caso de perda do cliente, sua reputação é dividida apenas entre os votantes e não com o acusado, isto por motivos de segurança tratados na Seção \ref{sec:ameacas_gerais}. 
 
 %
 À medida que certos usuários que não forneceram dados tão assertivos ou parecidos com o restante da rede recebem menos pontos de reputação, os usuários que contribuíram positivamente recebem mais. Essa redistribuição é baseada na média, assim a distância da probabilidade individual para a média rege quanto um usuário ganha ou perde.
+
+% TODO: média? Pq?
+
 %
 % Devido ao consenso distribuído, a maioria dos usuários deve concordar com o veredito e as redistribuições, consequentemente transações de veredito devem ser escritas e divulgadas na rede. 
 
@@ -665,7 +673,14 @@ A parte final da fase de auditoria e consequentemente de um ciclo completo do pr
 % A transação de \ac{VT}, como o nome sugere, contém o veredito sobre quem foi declarado desonesto e um conjunto de acréscimos ou decréscimos nos pontos de reputação destinados a cada usuário, indicando quanto será repassado individualmente no final do processo, valor esse que pode ser maior ou menor que o inicial apostado. Essa transação referencia todos os votos e utiliza a soma de seus respectivos valores como definição do montante total a ser dividido. 
 
 %
-Esse tipo de transação deve ser criado exclusivamente pelo usuário responsável pela acusação ou pelo prestador de serviço acusado, uma vez que necessariamente um dos dois - que tende a ser o vencedor - terá interesse na conclusão do processo de votação, obtenção do veredito e redivisão dos pontos de reputação. Junto a transação de \ac{VT} deve também ser enviada a chave pública que ambos os usuários obtiveram do módulo e que é capaz de descriptografar os dados, isso para que os outros participantes possam também ver os dados de votação e chegar ao mesmo veredito. Se a chave pública informada não está correta a transação não passa no processo de validação. Se ambos os participantes permitidos enviarem uma transação de \ac{VT} é validada a que estiver correta e se ambas estiverem corretas, será adicionada na bloco a primeira recebida. Os outros participantes devem também calcular o veredito e redivisões apenas para realizar o processo de validação dessas transações. Para tal, ao receber a transação repassada de algum outro nó, um usuário qualquer que deseja confirmar o veredito deve procurar todos os votos referenciados por essa transação na cadeia e utilizar a chave pública informada para descriptografar os dados de cada um. Possuindo os dados claros, basta executar o cálculo de veredito e redivisão e comparar o resultado obtido com os dados presentes na transação enviada e se estiverem de acordo a transação é considerada verídica e honesta e pode ser repassada. A transação de \ac{VT} é o fim do processo de auditoria de uma infraestrutura e portanto não há nenhuma outra transação existente que pode referenciá-la.
+Esse tipo de transação deve ser criado exclusivamente pelo usuário responsável pela acusação ou pelo prestador de serviço acusado, uma vez que necessariamente um dos dois - que tende a ser o vencedor - terá interesse na conclusão do processo de votação, obtenção do veredito e redivisão dos pontos de reputação. Junto a transação de \ac{VT} deve também ser enviada a chave pública que ambos os usuários obtiveram do módulo e que é capaz de descriptografar os dados, isso para que os outros participantes possam também ver os dados de votação e chegar ao mesmo veredito. Se a chave pública informada não está correta a transação não passa no processo de validação. Se ambos os participantes permitidos enviarem uma transação de \ac{VT} é validada a que estiver correta e se ambas estiverem corretas, será adicionada na bloco a primeira recebida. 
+%
+%
+%
+Para evitar que o cliente acusador ou o prestador acusado deliberadamente criem um atraso indefinido para o envio do veredito contendo a chave pública, é estipulado um limite de tempo para que esse tipo de transação seja enviada, sendo esse proporcional ao \textit{locktime} da votação em questão. Caso nenhum veredito seja recebido durante o período estipulado a votação é considerada inválida.
+
+%
+Os outros participantes devem também calcular o veredito e redivisões apenas para realizar o processo de validação dessas transações. Para tal, ao receber a transação repassada de algum outro nó, um usuário qualquer que deseja confirmar o veredito deve procurar todos os votos referenciados por essa transação na cadeia e utilizar a chave pública informada para descriptografar os dados de cada um. Possuindo os dados claros, basta executar o cálculo de veredito e redivisão e comparar o resultado obtido com os dados presentes na transação enviada e se estiverem de acordo a transação é considerada verídica e honesta e pode ser repassada. A transação de \ac{VT} é o fim do processo de auditoria de uma infraestrutura e portanto não há nenhuma outra transação existente que pode referenciá-la.
 
 \begin{table}[ht]
 \centering
@@ -681,7 +696,7 @@ Esse tipo de transação deve ser criado exclusivamente pelo usuário responsáv
          \hline
          \textit{Hashs} dos Votos & Contém os \textit{hashs} de todas as transações de voto enviadas para a votação & Variável\\
          \hline
-         Transferências & Vetor contendo o valor em reputação conferido a cada usuário participante da votação & Variável \\
+         Transferências & Vetor contendo a alteração em reputação conferida a cada usuário participante da votação & Variável \\
     \hline
     \end{tabular}
     \caption{Campos da transação de Veredito e transferências}
@@ -700,9 +715,73 @@ O primeiro campo contém o \textit{hash} da transação de convocação de vota�
 \label{fig:validacao_vt}
 \end{figure}
 
-Para a validação da transação de \ac{VT}, da mesma forma que nas outras, primeiramente são verificados os campos comuns e caso esses estejam corretos é carregada a acusação relativa. Com a transação recuperada é verificado se o \textit{locktime} já se encerrou - se novos votos não podem mais ser recebidos - e em caso positivo é verificado se todos os votos enviados e registrados na cadeia estão sendo referenciados no veredito. Após tais checagens, são então recuperados todos os votos listados, garantindo que todos os votos referenciados estão também presentes na cadeia. Cada voto é então descriptografado utilizando-se da chave pública de descriptografia e se os dados contidos forem válidos para a votação estes são armazenados, caso contrário apenas não são levados em conta no veredito e naturalmente nas transferências. Por fim, ao conhecer os dados de todos os votos que serão usados, gera-se o veredito e as transferências individuais para cada usuário participante. Se todas as verificações resultarem em sucesso e os vereditos individuais calculados na verificação coincidirem com os previamente listados pelo usuário que publicou a transação de \ac{VT} então a transação é considerada válida.
+Para a validação da transação de \ac{VT}, da mesma forma que nas outras, primeiramente são verificados os campos comuns e caso esses estejam corretos é carregada a acusação relativa. Com a transação recuperada é verificado se o \textit{locktime} já se encerrou - se novos votos não podem mais ser recebidos - e em caso positivo se verifica se o recebimento de vereditos ainda é permitido para aquela votação. Em caso positivo, é verificado se todos os votos enviados e registrados na cadeia estão sendo referenciados no veredito. Após tais checagens, são então recuperados todos os votos listados, garantindo que todos os votos referenciados estão também presentes na cadeia. Cada voto é então descriptografado utilizando-se da chave pública de descriptografia e se os dados contidos forem válidos para a votação estes são armazenados, caso contrário apenas não são levados em conta no veredito e naturalmente nas transferências. Por fim, ao conhecer os dados de todos os votos que serão usados, gera-se o veredito e as transferências individuais para cada usuário participante. Se todas as verificações resultarem em sucesso e os vereditos individuais calculados na verificação coincidirem com os previamente listados pelo usuário que publicou a transação de \ac{VT} então a transação é considerada válida.
 %
 Assim, todo o processo de votação pode ser visto como galhos que se expandem a partir de uma confirmação de serviço e que encontram seu fim com a gravação de uma transação de veredito no Blockchain.
+
+\subsection{Cálculo do Veredito}
+\label{subsec:calc_veredito}
+
+Para que seja possível distribuir os valores em reputação entre os diferentes usuários é necessária a existência de uma forma de cálculo dos valores apropriados para cada um, esta Seção tem por objetivo propor uma forma de divisão dos valores de reputação com base na assertividade dos dados apresentados pelos usuários.
+
+%
+Primeiramente, recebe-se a acusação do usuário, todos os votos respectivos e a chave capaz de descriptografá-los. Após todos os dados verificados, são extraídas as informações de monitoração em si para todo o período. Os dados individuais de cada usuário são então ordenados de maneira crescente com base nos resultados em porcentagem dos testes. Dessa forma, as primeiras posições de cada conjunto serão ocupadas por suas quebras mais severas e quanto mais perto das posições finais do conjunto, menor será a intensidade das mesmas. Se eventualmente houverem monitorações que não apresentam quebras, essas logicamente ocuparão as últimas posições. A ordenação dos dados pode ser realizada dessa maneira pois a análise de intensidade e quantidade de quebras é feita com base na distribuição de das violações no período e não essencialmente em sua ordem cronológica de ocorrência original.
+
+Então é calculada a dissimilaridade dos dados apresentados por diferentes usuários em relação a acusação feita pelo cliente. Para tal, cada voto é comparado individualmente com os dados da acusação, processo que se inicia através da extração da quantidade de quebras detectadas tanto na acusação do cliente quanto no voto a ser comparado, sendo que os registros não considerados quebras são os cuja porcentagem excede um certo limiar alto predefinido, como noventa ou noventa e cinco porcento de recursos disponibilizados, por exemplo. 
+
+%
+Após a identificação da quantidade de quebras nos dados ordenados dos conjuntos são utilizadas duas formas distintas de cálculo de dissimilaridade para formar o resultado final. Assim, sendo $q_a$ e $q_vi$ a quantidade de quebras identificadas na acusação e voto respectivamente, as diferentes dissimilaridades são calculadas por:
+
+\begin{equation}
+    D_1(A, V_i, q_a, q_{vi}) = \sum_{j = 1}^{q_a} \sum_{k = 1}^{q_{vi}} \sqrt{(A_j - V_ik)^2}
+\end{equation}
+
+\begin{equation}
+    D_2(A, V_i, q_a, q_{vi}) = \sum_{j = 1}^{q_a} \sum_{k = 1}^{q_a} \sqrt{(A_j - V_ik)^2}
+\end{equation}
+
+Na qual, $A$ é o conjunto de dados de monitoração da acusação, $V_i$ é conjunto de dados de um determinado voto, $A_j$ e $V_ik$ são registros pertencentes aos respectivos conjuntos e $D_1$ e $D_2$ são as medidas de dissimilaridade parcial. A dissimilaridade final é dada pela média aritmética das parciais. 
+
+%
+O uso de duas formas diferentes para o cálculo da dissimilaridade é empregado justamente pelas diferentes características que são levantadas por cada uma deles. A primeira forma $D_1$ compara individualmente cada quebra da acusação com cada outra quebra presente no voto, apresentando uma visão completa acerca das diferenças de intensidade de violação em ambos os conjuntos. Essa abordagem é interessante porque não se restringe unicamente à quantidade de quebras apontadas pelo cliente acusador quando a existência de mais ou menos violações nos votos podem indicar que o contexto de monitoração do cliente ou do voto não é condizente com o real. Entretanto, essa forma naturalmente supervaloriza o peso da quantidade de quebras no cálculo da dissimilaridade, de forma que um voto pode ter padrões de quebra muito semelhantes aos da acusação e possuir dissimilaridade maior que outros menos parecidos, apenas por uma pequena diferença na quantidade de quebras.
+
+%
+Para tratar tais condições é utilizada a segunda forma de dissimilaridade $D_2$ que utiliza única e exclusivamente a quantidade de violações apontadas pela acusação para realizar a comparação. Assim, foca-se principalmente na diferença de intensidade dos dados, assegurando que contextos semelhantes porém com número de quebras diferente não sejam considerados muito dispares. A junção das duas formas de cálculo garante portanto que a dissimilaridade cresce proporcionalmente a medida que a quantidade e intensidade de quebras difere nos dados apresentados, sem necessariamente adotar uma visão binária das informações.
+
+%
+Após obtidas as dissimilaridades individuais de todos os votos em relação à acusação, utiliza-se a mediana desses resultados como visão geral da rede sobre o quão distantes os dados se localizam. É usada a mediana ao invés da média de dissimilaridade pois a segunda é muito suscetível a variação decorrente de valores distantes do padrão, o que prejudicaria a precisão do veredito e das distribuições. Por fim, para gerar o veredito apenas é verificado se a mediana é menor que um determinado valor $\alpha$ de dissimilaridade e caso positivo o usuário é considerado vitorioso, caso contrário o prestador é definido como vencedor. O valor de $\alpha$ pode ser definido empiricamente ou com base nos próprios dados, ditando o que seria o limiar de semelhança dos votos com a acusação para que essa seja considerada verídica.
+
+Por fim para o cálculo das distribuições de reputação são utilizadas principalmente as informações referentes ao valor apostado pelo usuário e de quão próximo da mediana de dissimilaridade seus dados ficaram. Após o veredito, o acusado perde toda a sua reputação referente à aposta mínima e esta é dividida entre os votantes. Assim, se inicialmente o total de reputação apostado era formado por $n$ usuários incluindo o perdedor, agora o mesmo total será dividido por $n - 1$ justamente devido à sua derrota. Contudo, o valor individual é ponderado e a lógica por trás da ponderação é que todo usuário perde uma parte do que ele deveria receber como recompensa de acordo com a falta de precisão dos seus dados e recebe uma parcela do que todos os outros usuários perderam. A perda recebida por cada usuário acontece de forma proporcional à porcentagem representada pelo desvio de seus dados em relação ao somatório de desvio de todos os votos. A fração que cada usuário recebe da perda de outros é proporcional a porcentagem que sua aposta representa do total de reputação da votação. Logo, se todos os usuários convergirem precisamente sobre os dados, todos recebem apenas proporcionalmente ao quanto investiram e caso haja divergência nos votos os menos próximos ao consenso recebem menos. 
+
+%
+Como o usuário acusador não possui nenhum valor de dissimilaridade relacionado aos seus dados - pois as dissimilaridades são justamente calculadas em relação a sua acusação - este apenas recebe parcelas das perdas dos outros e para contrabalancear o fato de que o mesmo não perde reputação graças a imprecisão, evita-se que ele receba porcentagens maiores e então recebe apenas como base o mesmo valor que apostou. Praticamente então, o valor dividido entre os votantes é dado pelo valor total de reputação, menos a aposta inicial do cliente, dividido agora por $n - 2$ usuários. 
+
+Por fim, sendo $D_f$ a dissimilaridade final entre a acusação e um voto; $\Tilde{d}$ a mediana de todas as dissimilaridades; $D_t$ a soma das distâncias de dissimilaridades individuais até a mediana; $u$ a quantidade de usuários votantes; $v$ a quantidade de votos; $a_i$ a aposta de um usuário $i$ qualquer; $t$ o total de reputação daquela votação, as divisões de reputação são dadas pelas equações: 
+
+\begin{equation}
+    D_f(A, V_i) = \frac{D_1(A, V_i, q_a, q_{vi}) + D_2(A, V_i, q_a, q_{vi})}{2}
+\end{equation}
+
+\begin{equation}
+    D_t = \sum_{i = 1}^v D_f(A, V_i) - \Tilde{d}
+\end{equation}
+
+\begin{equation}
+    R_a = a_a + \sum_{i = 0, a \neq i}^u \frac{a_i}{t}(1 - \frac{D_f(A, V_i)}{D_t}) 
+\end{equation}
+
+\begin{equation}
+    R_i = a_i - \frac{a_i}{t}(1 - \frac{D_f(A, V_i)}{D_t}) + \sum_{j = 0, j \neq i}^u \frac{a_j}{t}(1 - \frac{D_f(A, V_j)}{D_t}) 
+\end{equation}
+
+Nas quais $R_i$ é a reputação de um usuário qualquer e $R_a$ trata-se da reputação do usuário acusador, caso o mesmo vença a votação. Nota-se ainda que o resultado é dado na forma de um novo valor de reputação, entretanto a transação de \ac{VT} espera um valor de adição ou subtração no total individual. Para calcular tal variação basta executar a subtração $R_i - a_i$ e então inseri-la na posição correta do vetor na transação.
+
+Essa forma de cálculo do veredito e das distribuições apresenta de maneira justa uma ponderação de assertividade dos dados e valor apostado na conferência de créditos ou débitos aos usuários. Entretanto, como já mencionado nessa seção, trata-se de uma forma inicial e básica de distribuição que pode eventualmente em trabalhos futuros ser refinada ou modificada, de modo a melhor se adequar a situações do mundo real. De maneira generalizada, o protocolo trata também de maneira agnóstica o cálculo dos vereditos, facilitando o emprego de novas abordagens interessantes desde que sejam previamente testadas e aprovadas em uma análise de ameaças teórica.
+
+% A medida de dissimilaridade é interessante para o presente caso pois garante singularidade e precisão para a diferenciação dos dados apresentados, compreendendo características como quantidade de quebras e intensidade das mesmas em uma medida única e eficiente.
+
+%
+            
 
 % \section{Transações especiais}
 % \label{sec:proposta:especiais}
@@ -804,3 +883,17 @@ A proposta de \citeonline{blockchain_cdn} trata-se de uma rede de Blockchain bas
 
 %
 O presente trabalho difere dos anteriores por propor um protocolo capaz de não apenas auxiliar a elaboração de contratos de \ac{IaaS} voltados para microsserviços, mas também sistematicamente ranquear os provedores de acordo com sua credibilidade. Esta é publicamente visível graças ao sistema de pontos de reputação, característica até então não observada em outras propostas e que exerce ajuda significativa no processo de escolha. Além disso, é proposto um sistema de auditoria dos \acp{SLA} que baseia-se no monitoramento descentralizado e atestável, convergindo para um mapeamento dinâmico da qualidade de serviço dos provedores. 
+
+\section{Considerações Parciais}
+\label{sec:proposta:consideracoes}
+
+Este capítulo dedica-se então a definição de um conjunto de formalismos teóricos que regem o funcionamento do protocolo, indicando como o mesmo utiliza as tecnologias subjacentes para estabelecer uma plataforma funcional voltada ao estabelecimento de contratos e a possibilidade de suas auditorias.
+
+%
+A definição do protocolo relaciona como de fato são organizadas as transações, suas estruturas e hierarquia de aparecimento na cadeia. Os aspectos principais instituídos para o módulo e para a carteira servem para auxiliar no mantimento do formato dos dados e interações com a rede, embora as próprias diretivas de validação garantam a coerência. A definição de características básicas da rede juntamente aos algoritmos de verificação para cada transação criam um perfil de comportamento que deve ser adotado pelos usuários para que estejam em comunhão com o coletivo, evitando rejeição de suas ações.
+
+%
+% No Capitulo \ref{ch:ameaças}, são então discutidas possíveis ameaças ao protocolo de acordo com as políticas de funcionamento 
+
+
+% TODO: indique as considerações do capítulo.
